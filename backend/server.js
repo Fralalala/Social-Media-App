@@ -11,8 +11,6 @@ import path from "path";
 
 connectDB();
 
-console.log(process.env.ACCESS_KEY_ID);
-
 const app = express();
 
 app.use(express.json());
