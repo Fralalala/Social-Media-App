@@ -5,7 +5,7 @@ import connectDB from "./config/db.js";
 import userRoutes from "./routes/userRoutes.js";
 import postRoutes from "./routes/postRoutes.js";
 import s3Routes from "./routes/s3Routes.js";
-
+import path from 'path'
 
 
 //loadings the contens of .env
@@ -21,6 +21,15 @@ app.use(express.json());
 // app.get("/", (req, res) => {
 //   res.send("Api is running line 12 server"); 
 // });
+
+if (process.env.NODE_ENV === "production") {
+  // Set static folder
+  app.use(express.static(path.join(__dirname, '/frontend/build')))
+
+  app.get("*", (req, res) =>
+    res.sendFile(path.resolve(__dirname, "frontend", "build", "index.html"))
+  );
+}
 
 app.use("/api/users", userRoutes);
 app.use("/api/post", postRoutes);
