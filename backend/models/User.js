@@ -34,6 +34,10 @@ const userSchema = mongoose.Schema(
       default:
         "https://252radio.com/wp-content/uploads/2016/11/default-user-image.png",
     },
+    profilePicKey : {
+      type: String,
+      required: true
+    },
     bio: {
       type: String,
       default: `Hi! Im a good person` 

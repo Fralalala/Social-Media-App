@@ -1,7 +1,7 @@
 import User from "../models/User.js";
 const registerUser = async (req, res) => {
   try {
-    const { name, email, password, uniqueName, profilePicSrc } = req.body;
+    const { name, email, password, uniqueName, imgSrc, imgKey } = req.body;
 
     const userExists = await User.findOne({ email });
 
@@ -9,7 +9,7 @@ const registerUser = async (req, res) => {
 
     if (userExists || uniqueNameExist) {
       res.status(400);
-      throw new Error(
+      throw new Error( 
         "user or Link name exist already exist line 10 userController.js"
       );
     }
@@ -19,7 +19,8 @@ const registerUser = async (req, res) => {
       email,
       uniqueName,
       password,
-      profilePicSrc,
+      profilePicSrc: imgSrc,
+      profilePicKey: imgKey
     });
 
     if (user) {
@@ -28,7 +29,9 @@ const registerUser = async (req, res) => {
         uniqueName: user.uniqueName,
         name: user.name,
         email: user.email,
+        bio: user.bio,
         profilePicSrc: user.profilePicSrc,
+        profilePicKey: user.profilePicKey,
         friends: user.friends,
       });
     } else {
@@ -111,6 +114,8 @@ const updateUser = async (req, res) => {
       newPassword,
       newBio,
       currentPassword,
+      newProfilePicSrc,
+      newProfilePicKey
     } = req.body;
 
     const user = await User.findById(_id);
@@ -122,6 +127,9 @@ const updateUser = async (req, res) => {
       user.email = newEmail !== "" ? newEmail : user.email;
       user.password = newPassword !== "" ? newPassword : user.password;
       user.bio = newBio !== "" ? newBio : user.bio;
+      user.profilePicSrc =
+        newProfilePicSrc !== "" ? newProfilePicSrc : user.profilePicSrc;
+      user.profilePicKey = newProfilePicKey !== "" ? newProfilePicKey : user.profilePicKey
 
       const updatedUser = await user.save();
 
@@ -132,6 +140,7 @@ const updateUser = async (req, res) => {
         bio: updatedUser.bio,
         email: updatedUser.email,
         profilePicSrc: updatedUser.profilePicSrc,
+        profilePicKey: updatedUser.profilePicKey,
         friends: updatedUser.friends,
       });
     } else {

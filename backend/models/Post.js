@@ -38,6 +38,9 @@ const postSchema = mongoose.Schema(
     postCaption: {
       type: String,
     },
+    postImgKey: {
+      type: String
+    },
     comments: [commentSchema],
   },
   {

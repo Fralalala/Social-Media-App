@@ -29,6 +29,8 @@ const SettingsScreen = ({ history }) => {
   const [bio, setBio] = useState("");
   // const [initialBio, setInitialBio] = useState("someBio");
 
+  const [images, setImages] = useState(null);
+
   const [userProfilePicSrc, setUserProfilePicSrc] = useState(
     "https://252radio.com/wp-content/uploads/2016/11/default-user-image.png"
   );
@@ -37,6 +39,8 @@ const SettingsScreen = ({ history }) => {
     "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Vero,perferendis"
   );
 
+  const [cardUserName, setCardUserName] = useState('Loading....')
+
   const [currentPassword, setCurrentPassword] = useState();
 
   const [isEditingName, setIsEditingName] = useState(false);
@@ -44,14 +48,14 @@ const SettingsScreen = ({ history }) => {
   const [isEditingPassword, setIsEditingPassword] = useState(false);
   const [isEditingBio, setIsEditingBio] = useState(false);
 
-  const isTheSame = (a, b) => {
-    return a === b;
-  };
-
   const submitHandler = (e) => {
     e.preventDefault();
+
+    //YO YOU JUST NEED TO ADD THE CURRENT USERS PROFILE PIC IMG KEY, CURRENTLY NO ACCOUNTS
+    //HAVE AN IMG KEY FOR THEIR PROFILE PICTURES
+
     dispatch(
-      updateUser(userInfo._id, name, email, bio, password, currentPassword)
+      updateUser(userInfo._id, name, email, bio, password, currentPassword, images, userInfo.profilePicKey)
     );
   };
 
@@ -66,7 +70,8 @@ const SettingsScreen = ({ history }) => {
       }
     } else {
       setUserProfilePicSrc(userInfo.profilePicSrc);
-      setUserBio(userInfo.bio)
+      setUserBio(userInfo.bio);
+      setCardUserName(userInfo.name)
     }
   }, [userInfo, history, dispatch]);
 
@@ -153,7 +158,7 @@ const SettingsScreen = ({ history }) => {
                     {isEditingBio ? <i> --Editing Bio</i> : ""}
                   </Form.Label>
                   <Form.Control
-                    type="email"
+                    type="text"
                     placeholder="Enter New Bio"
                     value={bio}
                     onChange={(e) => setBio(e.target.value)}
@@ -216,6 +221,28 @@ const SettingsScreen = ({ history }) => {
             <Row>
               <Col md={10}>
                 <FormGroup>
+                  <Form.Label>Select New Profile Picture</Form.Label>
+                  <Form.File
+                    type="file"
+                    id="image"
+                    name="image"
+                    onChange={(e) => setImages(e.target.files)}
+                  ></Form.File>
+                </FormGroup>
+              </Col>
+              <Col
+                md={2}
+                style={{
+                  alignContent: "center",
+                  margin: "auto",
+                  paddingTop: "11px",
+                }}
+              ></Col>
+            </Row>
+
+            <Row>
+              <Col md={10}>
+                <FormGroup>
                   <Form.Label>Enter Current Password</Form.Label>
                   <Form.Control
                     type="password"
@@ -242,13 +269,22 @@ const SettingsScreen = ({ history }) => {
           </Form>
         </Col>
 
-        <Col>
-          <Card style={{ width: "15rem" }}>
+        <Col md={3}>
+          <Card style={{ width: "17rem" }}>
+            <Button
+              type="submit"
+              variant="primary"
+              className="mr-2 mt-2"
+              style={{ position: "absolute", right: "0" }}
+            >
+              <i className="fas fa-edit"></i>
+            </Button>
+
             <Card.Img src={userProfilePicSrc} />
 
             <Card.Body style={{}}>
               <Card.Title className="" style={{ textAlign: "center" }}>
-                <h4>Rolando Morales Jr</h4>
+                <h4> {cardUserName} </h4>
               </Card.Title>
               {userBio}
               {/* <div style={{ marginTop: "5px" }}>Joined since ...</div> */}
@@ -256,6 +292,12 @@ const SettingsScreen = ({ history }) => {
           </Card>
         </Col>
       </Row>
+
+      <Button onClick={() => {
+        
+      }}>
+        make img key of current profile
+      </Button>
 
       <Row className="mt-5">
         <Col className="border border-right-0 border-danger p-4" md={3}>

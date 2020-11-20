@@ -17,6 +17,7 @@ import {
   USER_REGISTER_FAIL,
   USER_REGISTER_REQUEST,
   USER_REGISTER_SUCCESS,
+  USER_SIGN_OUT,
   USER_UPDATE_PROFILE_FAIL,
   USER_UPDATE_PROFILE_REQUEST,
   USER_UPDATE_PROFILE_SUCCESS,
@@ -73,6 +74,11 @@ export const userReducer = (state = { usersFriendsInfo: [] }, action) => {
         loading: false,
         error: action.payload,
       };
+
+    case USER_SIGN_OUT:
+      return {
+        usersFriendsInfo: []
+      }
 
     default:
       return state;

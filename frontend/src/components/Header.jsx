@@ -2,11 +2,14 @@ import React from "react";
 import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { LinkContainer } from "react-router-bootstrap";
+import { logout } from "../actions/postAction";
 
 const Header = () => {
   const dispatch = useDispatch();
+  const userReducer = useSelector(state => state.userReducer)
+  const postReducer = useSelector(state => state.postReducer)
 
-  const userReducer = useSelector((state) => state.userReducer);
+
 
   const {} = userReducer;
 
@@ -29,7 +32,14 @@ const Header = () => {
             <Nav className="ml-auto">
               <LinkContainer to="/profile">
                 <Nav.Link>
-                  <i className="fas fa-shopping-cart" /> Profile
+                  <i className="fas fa-user-circle"></i> Profile
+                </Nav.Link>
+              </LinkContainer>
+              <LinkContainer to="/login" onClick={() => {
+                dispatch(logout())
+              }}>
+                <Nav.Link>
+                  <i className="fas fa-sign-out-alt"></i> Logout
                 </Nav.Link>
               </LinkContainer>
             </Nav>

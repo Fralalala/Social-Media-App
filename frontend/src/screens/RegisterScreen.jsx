@@ -16,6 +16,8 @@ const RegisterScreen = ({ history }) => {
   const userReducer = useSelector((state) => state.userReducer);
   const { userInfo } = userReducer;
 
+  const [images, setImages] = useState()
+
   useEffect(() => {
     if (userInfo) {
       history.push("/");
@@ -28,7 +30,7 @@ const RegisterScreen = ({ history }) => {
     if (password !== password2) {
       alert("Passwords do not match");
     } else {
-      dispatch(register(name, email, password, uniqueName, profilePicSrc));
+      dispatch(register(name, email, password, uniqueName, images));
     }
   };
 
@@ -45,6 +47,7 @@ const RegisterScreen = ({ history }) => {
                 placeholder="Enter Full Name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
+                required
               ></Form.Control>
             </FormGroup>
             <FormGroup>
@@ -56,6 +59,7 @@ const RegisterScreen = ({ history }) => {
                 onChange={(e) => {
                   setUniqueName(e.target.value);
                 }}
+                required
               ></Form.Control>
             </FormGroup>
             <FormGroup>
@@ -67,20 +71,24 @@ const RegisterScreen = ({ history }) => {
                 onChange={(e) => {
                   setEmail(e.target.value);
                 }}
+                required
               ></Form.Control>
             </FormGroup>
 
 
             <FormGroup>
-            <Form.Label>Profile Pic Link</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Leave blank for default pic"
-                value={profilePicSrc}
-                onChange={(e) => {
-                  setProfilePicSrc(e.target.value);
-                }}
-              ></Form.Control>
+            <Form.Label>Profile Pic File</Form.Label>
+                <Form.File
+                  type="file"
+                  id="image"
+                  name="image"
+                  onChange={(e) => {
+                    setImages(e.target.files)
+                  }}
+                  required
+                >
+
+                </Form.File>
             </FormGroup>
 
 
@@ -91,6 +99,7 @@ const RegisterScreen = ({ history }) => {
                 placeholder="Enter Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                required
               ></Form.Control>
             </FormGroup>
             <FormGroup>
@@ -100,6 +109,7 @@ const RegisterScreen = ({ history }) => {
                 placeholder="Confirm Password"
                 value={password2}
                 onChange={(e) => setPassword2(e.target.value)}
+                required
               ></Form.Control>
             </FormGroup>
 
@@ -128,7 +138,7 @@ const RegisterScreen = ({ history }) => {
 
       <Row>
         <Col className="mt-4">
-          Have an Account
+          Have an Account?
           <Link to="/login"> Sign in Here </Link>
         </Col>
       </Row>

@@ -13,9 +13,6 @@ import Post from "../components/Post";
 import { useDispatch, useSelector } from "react-redux";
 import { getLoggedInUser } from "../actions/userActions";
 import { getAllPost, post, uploadFile } from "../actions/postAction";
-import axios from "axios";
-import aws from "aws-sdk";
-import fs from "fs";
 
 const ProfileScreen = ({ history }) => {
   const dispatch = useDispatch();
@@ -30,9 +27,8 @@ const ProfileScreen = ({ history }) => {
     "https://252radio.com/wp-content/uploads/2016/11/default-user-image.png"
   );
   const [caption, setCaption] = useState("");
-  const [images, setImage] = useState();
-
-  const myRef = useRef(null);
+  const [images, setImage] = useState([]);
+  const [bio, setBio] = useState("Loading Bio...")
 
   useEffect(() => {
     if (!userInfo) {
@@ -46,13 +42,14 @@ const ProfileScreen = ({ history }) => {
     } else {
       setProfilePic(userInfo.profilePicSrc);
       dispatch(getAllPost([], userInfo.uniqueName));
+      setBio(userInfo.bio)
     }
   }, [userInfo, dispatch, history]);
 
   const submitHandler = async (e) => {
     e.preventDefault();
 
-    dispatch(
+    await dispatch(
       post(
         userInfo.profilePicSrc,
         userInfo._id,
@@ -61,6 +58,8 @@ const ProfileScreen = ({ history }) => {
         images
       )
     );
+
+    dispatch(getAllPost([], userInfo.uniqueName));
   };
 
   return (
@@ -98,7 +97,6 @@ const ProfileScreen = ({ history }) => {
                     id="image"
                     label="this is a label"
                     name="image"
-                    ref={myRef}
                     onChange={(e) => {
                       setImage(e.target.files);
                       console.log(e.target.files);
@@ -118,9 +116,7 @@ const ProfileScreen = ({ history }) => {
         <Col md={4}>
           <Card className="mb-3">
             <Card.Body>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi id,
-              quisquam aut consectetur nam accusantium nulla impedit
-              voluptatibus error natus.
+              {bio}
             </Card.Body>
           </Card>
 
@@ -145,6 +141,8 @@ const ProfileScreen = ({ history }) => {
                 posterUniqueName={post.posterUniqueName}
                 postCaption={post.postCaption}
                 posterImgSrc={post.posterImgSrc}
+                postImgKey={post.postImgKey}
+                _id={post._id}
                 key={post._id}
               />
             );

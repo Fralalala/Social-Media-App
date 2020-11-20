@@ -32,16 +32,16 @@ const makePost = async (req, res) => {
       postCaption,
       posterUniqueName,
       postImgSrc,
+      postImgKey,
     } = req.body;
 
-    
-    
     const post = await Post.create({
       posterImgSrc,
       posterId,
       postImgSrc,
       postCaption,
       posterUniqueName,
+      postImgKey,
       comments: [],
     });
 
@@ -53,6 +53,7 @@ const makePost = async (req, res) => {
         postImgSrc: post.postImgSrc,
         postCaption: post.postCaption,
         posterUniqueName: post.posterUniqueName,
+        postImgKey: post.postImgKey,
         comments: [],
       });
     } else {
@@ -68,4 +69,19 @@ const makePost = async (req, res) => {
   }
 };
 
-export { makePost, getPosts };
+const delPost = async (req, res) => {
+  try {
+    const { _id } = req.headers;
+
+    const post = await Post.findByIdAndDelete(_id);
+
+    res.status(201).json({
+      msg: "Delete is a success"
+    })
+
+  } catch (error) {
+    res.status(500).send("smething went wrong in deleting a post");
+  }
+};
+
+export { makePost, getPosts, delPost };

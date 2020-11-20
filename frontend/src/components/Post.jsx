@@ -4,13 +4,33 @@ import {
   Button,
   Card,
   Col,
+  Dropdown,
   Form,
   Image,
   Modal,
   Row,
 } from "react-bootstrap";
 
-const Post = ({ posterImgSrc, postCaption, posterUniqueName, postImgSrc }) => {
+import { useDispatch, useSelector } from "react-redux";
+import { deletePost, getAllPost } from "../actions/postAction";
+
+const Post = ({
+  posterImgSrc,
+  postCaption,
+  posterUniqueName,
+  postImgSrc,
+  postImgKey,
+  _id,
+  location,
+}) => {
+  // const postReducer = useSelector((state) => state.postReducer);
+  // const { posts, loading } = postReducer;
+
+  const userReducer = useSelector((state) => state.userReducer);
+  const { userInfo } = userReducer;
+
+  const dispatch = useDispatch();
+
   const [isLiked, setIsLiked] = useState(false);
   const [isCommentsOpened, setIsCommentsOpened] = useState(false);
   const [isCommenting, setIsCommenting] = useState(false);
@@ -22,13 +42,38 @@ const Post = ({ posterImgSrc, postCaption, posterUniqueName, postImgSrc }) => {
       <Card.Header>
         <Row>
           <Col md={2}>
-            <Image src={posterImgSrc} roundedCircle style={{ width: "3rem" }} />
+            <Image
+              src={posterImgSrc}
+              roundedCircle
+              style={{ width: "3rem" }}
+            />
           </Col>
-          <Col style={{ paddingTop: "12px", marginLeft: "-20px" }}>
+          <Col style={{ paddingTop: "12px", marginLeft: "-20px" }} md={2}>
             <Card.Text>
               <h5>{posterUniqueName}</h5>
             </Card.Text>
           </Col>
+          <Dropdown className="ml-auto mr-3">
+            <Dropdown.Toggle id="dropdown-basic" />
+
+            <Dropdown.Menu>
+              <Dropdown.Item
+                onClick={async () => {
+                  // console.log(postImgKey)
+
+                  await dispatch(deletePost(postImgKey, _id));
+
+                  if (window.location.pathname === "/") {
+                    dispatch(getAllPost(userInfo.friends, userInfo.uniqueName));
+                  } else {
+                    dispatch(getAllPost([], userInfo.uniqueName));
+                  }
+                }}
+              >
+                Delete
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
         </Row>
       </Card.Header>
 
@@ -42,13 +87,13 @@ const Post = ({ posterImgSrc, postCaption, posterUniqueName, postImgSrc }) => {
           style={{
             objectFit: "cover",
             width: "100%",
-            height: "15rem",
+            height: "20rem",
             padding: "0 20px 0 20px",
           }}
         />
       )}
 
-      <Card.Body>
+      <Card.Body style={{ background: "#373a40" }}>
         <Row>
           <Col md={6}>
             <Button
@@ -103,13 +148,14 @@ const Post = ({ posterImgSrc, postCaption, posterUniqueName, postImgSrc }) => {
             <Button
               style={{ width: "100%" }}
               onClick={() => setIsCommenting(!isCommenting)}
+              disabled
             >
               Comment
             </Button>
           </Col>
         </Row>
       </Card.Body>
-      <>
+      {/* <>
         <Accordion>
           <Card.Header>
             <Card.Header>
@@ -123,17 +169,17 @@ const Post = ({ posterImgSrc, postCaption, posterUniqueName, postImgSrc }) => {
               >
                 {isCommentsOpened ? "Hide Comments" : "See Comments"}
               </Accordion.Toggle>
-            </Card.Header>
+            </Card.Header> */}
 
-            {/* use parenthesis in the methods instead of curly brackets */}
-            {comments.map((comment) => (
-              <Accordion.Collapse eventKey="0" key={comment} >
+      {/* use parenthesis in the methods instead of curly brackets */}
+      {/* {comments.map((comment) => (
+              <Accordion.Collapse eventKey="0" key={comment}>
                 <Card.Body>{comment}</Card.Body>
               </Accordion.Collapse>
             ))}
           </Card.Header>
-        </Accordion>
-      </>
+        </Accordion> */}
+      {/* </> */}
     </Card>
   );
 };

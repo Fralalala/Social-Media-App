@@ -10,12 +10,13 @@ import {
   registerUser,
   updateUser,
 } from "../controller/userController.js";
-const router = express.Router();
+import { uploadObject } from "../middleware/s3Middleware.js";
+const router = express.Router(); 
 
 //update to /register, /getUser in the future
 router
   .route("/")
-  .post(registerUser) //regiser a user
+  .post(uploadObject,registerUser) //regiser a user
   .get(getDetails) //get user details
   .put(updateUser); //update user
 

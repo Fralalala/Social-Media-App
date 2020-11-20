@@ -76,6 +76,8 @@ const HomeScreen = ({ history }) => {
                 posterUniqueName={post.posterUniqueName}
                 postCaption={post.postCaption}
                 posterImgSrc={post.posterImgSrc}
+                postImgKey={post.postImgKey}
+                _id= {post._id}
                 key={post._id}
               />
             );

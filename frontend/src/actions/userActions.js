@@ -28,7 +28,7 @@ export const register = (
   email,
   password,
   uniqueName,
-  profilePicSrc
+  images
 ) => async (dispatch) => {
   try {
     dispatch({ type: USER_REGISTER_REQUEST });
@@ -39,9 +39,19 @@ export const register = (
       },
     };
 
+
+      let formData = new FormData();
+
+      formData.append("image", images[0], images[0].name);
+  
+      const {
+        data: { imgSrc, imgKey },
+      } = await axios.post("/api/s3", formData);
+    
+
     const { data } = await axios.post(
       "/api/users",
-      { name, email, password, uniqueName, profilePicSrc },
+      { name, email, password, uniqueName, imgSrc, imgKey },
       config
     );
 
@@ -212,7 +222,9 @@ export const updateUser = (
   newEmail,
   newBio,
   newPassword,
-  currentPassword
+  currentPassword,
+  images,
+  previousProfilePicKey
 ) => async (dispatch) => {
   try {
     dispatch({
@@ -226,9 +238,37 @@ export const updateUser = (
       },
     };
 
+    let newProfilePicSrc = "";
+    let newProfilePicKey = "";
+
+    if (images.length > 0) {
+      let formData = new FormData();
+
+      formData.append("image", images[0], images[0].name);
+
+      //upload new profile pic to s3
+      const {
+        data: { imgSrc, imgKey },
+      } = await axios.post("/api/s3", formData);
+
+      newProfilePicSrc = imgSrc
+      newProfilePicKey = imgKey
+
+      const delConfig = {
+        headers: {
+          "Content-Type": "application/json",
+          previousProfilePicKey
+        },
+      };
+
+      //delete previous profile pic in s3
+      const {data:{msg}} = await axios.delete("/api/s3", delConfig) 
+
+    }
+
     const { data } = await axios.put(
       "api/users",
-      { newName, newEmail,newBio, newPassword, currentPassword },
+      { newName, newEmail, newBio, newPassword, currentPassword, newProfilePicSrc, newProfilePicKey },
       config
     );
 
@@ -237,12 +277,8 @@ export const updateUser = (
       payload: data,
     });
 
-    alert("Info has been Updated")
-
+    alert("Info has been Updated");
   } catch (error) {
-
-
-
     console.error(error);
     dispatch({
       type: USER_UPDATE_PROFILE_FAIL,
@@ -250,3 +286,7 @@ export const updateUser = (
     });
   }
 };
+
+export const sample = () => {
+  
+}
