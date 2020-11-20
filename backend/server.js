@@ -18,9 +18,9 @@ const app = express();
 
 app.use(express.json());
 
-app.get("/", (req, res) => {
-  res.send("Api is running line 12 server"); 
-});
+// app.get("/", (req, res) => {
+//   res.send("Api is running line 12 server"); 
+// });
 
 app.use("/api/users", userRoutes);
 app.use("/api/post", postRoutes);
@@ -28,7 +28,7 @@ app.use("/api/s3", s3Routes);
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(
+app.listen( 
   PORT,
   console.log(`server running in ${process.env.NODE_ENV} on port ${PORT} `)
 );
