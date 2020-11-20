@@ -5,39 +5,41 @@ import connectDB from "./config/db.js";
 import userRoutes from "./routes/userRoutes.js";
 import postRoutes from "./routes/postRoutes.js";
 import s3Routes from "./routes/s3Routes.js";
-import path from 'path'
-
+import path from "path";
 
 //loadings the contens of .env
 
 connectDB();
 
-console.log(process.env.ACCESS_KEY_ID) 
+console.log(process.env.ACCESS_KEY_ID);
 
 const app = express();
 
 app.use(express.json());
 
 // app.get("/", (req, res) => {
-//   res.send("Api is running line 12 server"); 
+//   res.send("Api is running line 12 server");
 // });
-
-if (process.env.NODE_ENV === "production") {
-  // Set static folder
-  app.use(express.static(path.join(__dirname, '/frontend/build')))
-
-  app.get("*", (req, res) =>
-    res.sendFile(path.resolve(__dirname, "frontend", "build", "index.html"))
-  );
-}
 
 app.use("/api/users", userRoutes);
 app.use("/api/post", postRoutes);
 app.use("/api/s3", s3Routes);
 
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '/frontend/build')))
+
+  app.get('*', (req, res) =>
+    res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'))
+  )
+} else {
+  app.get('/', (req, res) => {
+    res.send('API is running....')
+  })
+}
+
 const PORT = process.env.PORT || 5000;
 
-app.listen( 
+app.listen(
   PORT,
   console.log(`server running in ${process.env.NODE_ENV} on port ${PORT} `)
 );
