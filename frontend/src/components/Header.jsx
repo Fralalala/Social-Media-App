@@ -1,4 +1,5 @@
-import React from "react";
+import React, { Fragment } from "react";
+import { useEffect, useState } from "react";
 import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { LinkContainer } from "react-router-bootstrap";
@@ -6,10 +7,17 @@ import { logout } from "../actions/postAction";
 
 const Header = () => {
   const dispatch = useDispatch();
-  const userReducer = useSelector(state => state.userReducer)
-  const postReducer = useSelector(state => state.postReducer)
+  const userReducer = useSelector((state) => state.userReducer);
+  const { userInfo } = userReducer;
+  const [isLoggedIn, setisLoggedIn] = useState(false);
 
-
+  useEffect(() => {
+    if (userInfo) {
+      setisLoggedIn(true);
+    } else {
+      setisLoggedIn(false);
+    }
+  }, [userInfo]);
 
   const {} = userReducer;
 
@@ -30,18 +38,38 @@ const Header = () => {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ml-auto">
-              <LinkContainer to="/profile">
-                <Nav.Link>
-                  <i className="fas fa-user-circle"></i> Profile
-                </Nav.Link>
-              </LinkContainer>
-              <LinkContainer to="/login" onClick={() => {
-                dispatch(logout())
-              }}>
-                <Nav.Link>
-                  <i className="fas fa-sign-out-alt"></i> Logout
-                </Nav.Link>
-              </LinkContainer>
+              {isLoggedIn === true ? (
+                <Fragment>
+                  <LinkContainer to="/profile">
+                    <Nav.Link>
+                      <i className="fas fa-user-circle"></i> Profile
+                    </Nav.Link>
+                  </LinkContainer>
+
+                  <LinkContainer to="/friends">
+                    <Nav.Link>
+                      <i className="fas fa-users"></i> Friends
+                    </Nav.Link>
+                  </LinkContainer>
+                  <LinkContainer to="/settings">
+                    <Nav.Link>
+                      <i className="fas fa-user-cog"></i> Settings
+                    </Nav.Link>
+                  </LinkContainer>
+                  <LinkContainer
+                    to="/login"
+                    onClick={() => {
+                      dispatch(logout());
+                    }}
+                  >
+                    <Nav.Link>
+                      <i className="fas fa-sign-out-alt"></i> Logout
+                    </Nav.Link>
+                  </LinkContainer>
+                </Fragment>
+              ) : (
+                <></>
+              )}
             </Nav>
           </Navbar.Collapse>
         </Container>

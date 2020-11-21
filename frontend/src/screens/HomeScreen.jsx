@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import { Card, Col, Container, Image, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -41,15 +41,14 @@ const HomeScreen = ({ history }) => {
       <Row>
         <Col md={3}>
           <Card className="mb-3" style={{}}>
-            <Image
-              src={profilePicture}
-              alt="somethign wen wrong"
-              rounded
-              style={{ width: "11rem" }}
-              className="m-auto pt-4 "
-            />
             <Card.Body>
-              <Link to="/profile">
+              <Image
+                src={profilePicture}
+                alt="somethign wen wrong"
+                rounded
+                style={{ width: "11rem" }}
+              />
+              {/* <Link to="/profile">
                 <Card.Text as="p">{name}</Card.Text>
               </Link>
               <Link to="/settings">
@@ -57,31 +56,41 @@ const HomeScreen = ({ history }) => {
               </Link>
               <Link to="/friends">
                 <Card.Text>Friends</Card.Text>
-              </Link>
+              </Link> */}
             </Card.Body>
           </Card>
         </Col>
 
         <Col md={9}>
-          <Card className="mb-3">
-            <Card.Body>
-              <Card.Text>No Post</Card.Text>
-            </Card.Body>
-          </Card>
+          {posts.length === 0 && (
+            <Fragment>
+              <Col md={9}>
+                <Card className="mb-3">
+                  <Card.Body>
+                    <Card.Text>No Post</Card.Text>
+                  </Card.Body>
+                </Card>
+              </Col>
+            </Fragment>
+          )}
 
-          {posts.map((post) => {
-            return (
-              <Post
-                postImgSrc={post.postImgSrc}
-                posterUniqueName={post.posterUniqueName}
-                postCaption={post.postCaption}
-                posterImgSrc={post.posterImgSrc}
-                postImgKey={post.postImgKey}
-                _id= {post._id}
-                key={post._id}
-              />
-            );
-          })}
+          {posts.length > 0 ? (
+            posts.map((post) => {
+              return (
+                <Post
+                  postImgSrc={post.postImgSrc}
+                  posterUniqueName={post.posterUniqueName}
+                  postCaption={post.postCaption}
+                  posterImgSrc={post.posterImgSrc}
+                  postImgKey={post.postImgKey}
+                  _id={post._id}
+                  key={post._id}
+                />
+              );
+            })
+          ) : (
+            <> </>
+          )}
         </Col>
       </Row>
     </Container>

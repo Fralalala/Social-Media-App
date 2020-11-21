@@ -17,11 +17,11 @@ import { deletePost, getAllPost } from "../actions/postAction";
 const Post = ({
   posterImgSrc,
   postCaption,
+  posterName,
   posterUniqueName,
   postImgSrc,
   postImgKey,
   _id,
-  location,
 }) => {
   // const postReducer = useSelector((state) => state.postReducer);
   // const { posts, loading } = postReducer;
@@ -42,15 +42,11 @@ const Post = ({
       <Card.Header>
         <Row>
           <Col md={2}>
-            <Image
-              src={posterImgSrc}
-              roundedCircle
-              style={{ width: "3rem" }}
-            />
+            <Image src={posterImgSrc} roundedCircle style={{ width: "3rem" }} />
           </Col>
-          <Col style={{ paddingTop: "12px", marginLeft: "-20px" }} md={2}>
+          <Col style={{ paddingTop: "12px", marginLeft: "-20px" }}>
             <Card.Text>
-              <h5>{posterUniqueName}</h5>
+              <h5>{posterName || posterUniqueName}</h5>
             </Card.Text>
           </Col>
           <Dropdown className="ml-auto mr-3">

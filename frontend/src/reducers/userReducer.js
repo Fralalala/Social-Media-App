@@ -23,7 +23,7 @@ import {
   USER_UPDATE_PROFILE_SUCCESS,
 } from "../constants/userConstants";
 
-export const userReducer = (state = { usersFriendsInfo: [] }, action) => {
+export const userReducer = (state = { usersFriendsInfo: [], loading : false }, action) => {
   switch (action.type) {
     case USER_LOGIN_REQUEST:
     case USER_DETAILS_REQUEST:

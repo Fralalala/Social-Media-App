@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Form, Button, Row, Col, Container, FormGroup } from "react-bootstrap";
+import {
+  Form,
+  Button,
+  Row,
+  Col,
+  Container,
+  FormGroup,
+  Spinner,
+} from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { getLoggedInUser, login } from "../actions/userActions";
@@ -12,7 +20,9 @@ const LoginScreen = ({ history }) => {
 
   const userReducer = useSelector((state) => state.userReducer);
 
-  const { userInfo } = userReducer;
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
+
+  const { userInfo, loading } = userReducer;
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -29,15 +39,25 @@ const LoginScreen = ({ history }) => {
       if (id) {
         getLoggedInUser(id);
       }
+
+      
     }
-  }, [userInfo]);
+
+    setIsLoggingIn(loading)
+
+  }, [userInfo, loading]);
 
   return (
     <Container className="mt-4 ">
       <Row>
         <Col md={6}>
           <h1>Sign in</h1>
-          <Form onSubmit={submitHandler}>
+          <Form
+            onSubmit={(e) => {
+              // setIsLoggingIn(true);
+              submitHandler(e);
+            }}
+          >
             <FormGroup>
               <Form.Label>Email Address</Form.Label>
               <Form.Control
@@ -59,9 +79,22 @@ const LoginScreen = ({ history }) => {
               ></Form.Control>
             </FormGroup>
 
-            <Button type="submit" variant="primary">
-              Login
-            </Button>
+            <Row>
+              <Col>
+                <Button type="submit" variant="primary">
+                  Login
+                </Button>
+              </Col>
+
+              <Col>
+                <Spinner
+                  animation="grow"
+                  className="ml-auto"
+                  style={{ float: "right" }}
+                  hidden={!isLoggingIn}
+                />
+              </Col>
+            </Row>
           </Form>
         </Col>
 

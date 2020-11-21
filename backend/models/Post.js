@@ -16,7 +16,6 @@ const commentSchema = mongoose.Schema({
 });
 
 const postSchema = mongoose.Schema(
-
   //add the normal name of the poster
 
   {
@@ -25,6 +24,10 @@ const postSchema = mongoose.Schema(
       required: true,
     },
     posterId: {
+      type: String,
+      required: true,
+    },
+    posterName: {
       type: String,
       required: true,
     },
@@ -39,7 +42,7 @@ const postSchema = mongoose.Schema(
       type: String,
     },
     postImgKey: {
-      type: String
+      type: String,
     },
     comments: [commentSchema],
   },

@@ -43,6 +43,7 @@ export const post = (
   posterImgSrc,
   posterId,
   postCaption,
+  posterName,
   posterUniqueName,
   images
 ) => async (dispatch) => {
@@ -58,6 +59,7 @@ export const post = (
     let tempImgSrc;
     let tempImgKey;
 
+    //Upload to s3 bucket
     if (images.length !== 0) {
       let formData = new FormData();
 
@@ -77,6 +79,7 @@ export const post = (
         posterImgSrc,
         posterId,
         postCaption,
+        posterName,
         posterUniqueName,
         postImgSrc: tempImgSrc ? tempImgSrc : "",
         postImgKey: tempImgKey ? tempImgKey : "",

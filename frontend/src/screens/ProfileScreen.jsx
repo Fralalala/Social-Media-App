@@ -28,7 +28,7 @@ const ProfileScreen = ({ history }) => {
   );
   const [caption, setCaption] = useState("");
   const [images, setImage] = useState([]);
-  const [bio, setBio] = useState("Loading Bio...")
+  const [bio, setBio] = useState("Loading Bio...");
 
   useEffect(() => {
     if (!userInfo) {
@@ -42,7 +42,7 @@ const ProfileScreen = ({ history }) => {
     } else {
       setProfilePic(userInfo.profilePicSrc);
       dispatch(getAllPost([], userInfo.uniqueName));
-      setBio(userInfo.bio)
+      setBio(userInfo.bio);
     }
   }, [userInfo, dispatch, history]);
 
@@ -54,6 +54,7 @@ const ProfileScreen = ({ history }) => {
         userInfo.profilePicSrc,
         userInfo._id,
         caption,
+        userInfo.name,
         userInfo.uniqueName,
         images
       )
@@ -69,15 +70,15 @@ const ProfileScreen = ({ history }) => {
         style={{ backgroundColor: "#393e46", marginBottom: "35px" }}
       >
         <Col md={2}>
-          <Image src={profilePic} roundedCircle style={{ width: "12rem" }} />
+          <Image src={profilePic} roundedCircle style={{ height: "13rem" }} />
         </Col>
         <Col className="px-5" md={10}>
           <Row>
             <Col md={12}>
               <Form
-                action="api/post"
-                method="POST"
-                encType="multipart/form-data"
+                // action="api/post"
+                // // method="POST"
+                // encType="multipart/form-data"
                 onSubmit={submitHandler}
               >
                 <Form.Group>
@@ -91,21 +92,27 @@ const ProfileScreen = ({ history }) => {
                   />
                 </Form.Group>
 
-                <Form.Group>
-                  <Form.File
-                    type="file"
-                    id="image"
-                    label="this is a label"
-                    name="image"
-                    onChange={(e) => {
-                      setImage(e.target.files);
-                      console.log(e.target.files);
-                    }}
-                  />
-                </Form.Group>
-                <Button type="submit" className="ml-auto ">
-                  Post
-                </Button>
+                <Row>
+                  <Col>
+                    <Form.Group>
+                      <Form.File
+                        type="file"
+                        id="image"
+                        name="image"
+                        onChange={(e) => {
+                          setImage(e.target.files);
+                          console.log(e.target.files);
+                        }}
+                      />
+                    </Form.Group>
+                  </Col>
+
+                  <Col>
+                    <Button type="submit" style={{ float: "right", width: "9rem" }}>
+                      Post
+                    </Button>
+                  </Col>
+                </Row>
               </Form>
             </Col>
           </Row>
@@ -115,9 +122,7 @@ const ProfileScreen = ({ history }) => {
       <Row>
         <Col md={4}>
           <Card className="mb-3">
-            <Card.Body>
-              {bio}
-            </Card.Body>
+            <Card.Body>{bio}</Card.Body>
           </Card>
 
           <Image
@@ -142,6 +147,7 @@ const ProfileScreen = ({ history }) => {
                 postCaption={post.postCaption}
                 posterImgSrc={post.posterImgSrc}
                 postImgKey={post.postImgKey}
+                posterName={post.posterName}
                 _id={post._id}
                 key={post._id}
               />

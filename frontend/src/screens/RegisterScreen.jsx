@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Form, Button, Row, Col, Container, FormGroup } from "react-bootstrap";
+import { Form, Button, Row, Col, Container, FormGroup, Spinner } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { register } from "../actions/userActions";
@@ -35,7 +35,7 @@ const RegisterScreen = ({ history }) => {
   };
 
   return (
-    <Container className="mt-4 ">
+    <Container className="mt-4 "  >
       <Row>
         <Col md={6}>
           <h1>Create an Account</h1>
@@ -116,6 +116,9 @@ const RegisterScreen = ({ history }) => {
             <Button type="submit" variant="primary">
               Login
             </Button>
+
+            <Spinner animation="grow" />
+
           </Form>
         </Col>
 
