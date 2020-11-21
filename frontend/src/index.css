@@ -15,3 +15,12 @@ code {
 main {
   min-height: 82.2vh;
 }
+
+.postImg:hover {
+  -webkit-filter: brightness(70%);
+  -webkit-transition: all 1s ease;
+  -moz-transition: all 1s ease;
+  -o-transition: all 1s ease;
+  -ms-transition: all 1s ease;
+  transition: all 1s ease;
+}

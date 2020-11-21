@@ -53,8 +53,8 @@ const FriendsScreen = ({ history }) => {
   };
 
   return (
-    <Container className="mt-5">
-      <Row>
+    <Container  >
+      <Row >
         <Col md={4} className="ml-auto">
           <Form onSubmit={submitHandler}>
             <Form.Row className="align-items-center">

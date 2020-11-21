@@ -28,7 +28,7 @@ const Header = () => {
         variant="dark"
         expand="lg"
         collapseOnSelect
-        className="mb-5"
+        className="mb-4"
       >
         <Container>
           <LinkContainer to="/">

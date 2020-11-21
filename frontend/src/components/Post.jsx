@@ -86,6 +86,10 @@ const Post = ({
             height: "20rem",
             padding: "0 20px 0 20px",
           }}
+          className= "postImg"
+          onClick={() => {
+            setIsCommenting(true)
+          }}
         />
       )}
 
@@ -106,39 +110,18 @@ const Post = ({
             <Modal
               show={isCommenting}
               onHide={() => setIsCommenting(false)}
-              size="md"
-              aria-labelledby="contained-modal-title-vcenter"
-              centered
+              size={'xl'}
+              dialogClassName="modal-90w"
+              aria-labelledby="example-custom-modal-styling-title"
             >
-              <Modal.Dialog>
-                <Modal.Header closeButton>
-                  <Modal.Title>Enter Comment</Modal.Title>
-                </Modal.Header>
-
-                <Modal.Body>
-                  <Row>
-                    <Col md={1}>
-                      <Image
-                        src="https://252radio.com/wp-content/uploads/2016/11/default-user-image.png"
-                        roundedCircle
-                        style={{ width: "3rem" }}
-                      ></Image>
-                    </Col>
-                    <Col className="px-5">
-                      <Form>
-                        <Form.Group>
-                          <Form.Control as="textarea" rows={6} />
-                        </Form.Group>
-                      </Form>
-                    </Col>
-                  </Row>
-                </Modal.Body>
-
-                <Modal.Footer>
-                  <Button variant="secondary">Close</Button>
-                  <Button variant="primary">Send Comment</Button>
-                </Modal.Footer>
-              </Modal.Dialog>
+              <Modal.Header closeButton>
+                <Modal.Title>
+                  Picture
+                </Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <Image src={postImgSrc} fluid />
+              </Modal.Body>
             </Modal>
 
             <Button

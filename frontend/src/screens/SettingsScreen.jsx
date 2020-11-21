@@ -18,17 +18,9 @@ const SettingsScreen = ({ history }) => {
   const { userInfo } = userReducer;
 
   const [email, setEmail] = useState("");
-  // const [initialEmail, setInitialEmail] = useState("random@email");
-
   const [password, setPassword] = useState("");
-  // const [initialPassword, setInitialPassword] = useState("somePassword");
-
   const [name, setName] = useState("");
-  // const [initialName, setInitialName] = useState("someName");
-
   const [bio, setBio] = useState("");
-  // const [initialBio, setInitialBio] = useState("someBio");
-
   const [images, setImages] = useState(null);
 
   const [userProfilePicSrc, setUserProfilePicSrc] = useState(
@@ -39,7 +31,7 @@ const SettingsScreen = ({ history }) => {
     "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Vero,perferendis"
   );
 
-  const [cardUserName, setCardUserName] = useState('Loading....')
+  const [cardUserName, setCardUserName] = useState("Loading....");
 
   const [currentPassword, setCurrentPassword] = useState();
 
@@ -51,11 +43,17 @@ const SettingsScreen = ({ history }) => {
   const submitHandler = (e) => {
     e.preventDefault();
 
-    //YO YOU JUST NEED TO ADD THE CURRENT USERS PROFILE PIC IMG KEY, CURRENTLY NO ACCOUNTS
-    //HAVE AN IMG KEY FOR THEIR PROFILE PICTURES
-
     dispatch(
-      updateUser(userInfo._id, name, email, bio, password, currentPassword, images, userInfo.profilePicKey)
+      updateUser(
+        userInfo._id,
+        name,
+        email,
+        bio,
+        password,
+        currentPassword,
+        images,
+        userInfo.profilePicKey
+      )
     );
   };
 
@@ -71,7 +69,7 @@ const SettingsScreen = ({ history }) => {
     } else {
       setUserProfilePicSrc(userInfo.profilePicSrc);
       setUserBio(userInfo.bio);
-      setCardUserName(userInfo.name)
+      setCardUserName(userInfo.name);
     }
   }, [userInfo, history, dispatch]);
 
@@ -271,14 +269,6 @@ const SettingsScreen = ({ history }) => {
 
         <Col md={3}>
           <Card style={{ width: "17rem" }}>
-            <Button
-              type="submit"
-              variant="primary"
-              className="mr-2 mt-2"
-              style={{ position: "absolute", right: "0" }}
-            >
-              <i className="fas fa-edit"></i>
-            </Button>
 
             <Card.Img src={userProfilePicSrc} />
 
@@ -292,12 +282,6 @@ const SettingsScreen = ({ history }) => {
           </Card>
         </Col>
       </Row>
-
-      <Button onClick={() => {
-        
-      }}>
-        make img key of current profile
-      </Button>
 
       <Row className="mt-5">
         <Col className="border border-right-0 border-danger p-4" md={3}>
