@@ -23,4 +23,5 @@ main {
   -o-transition: all 1s ease;
   -ms-transition: all 1s ease;
   transition: all 1s ease;
+  cursor: pointer;
 }
