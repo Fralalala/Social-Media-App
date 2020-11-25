@@ -36,7 +36,8 @@ const userSchema = mongoose.Schema(
     },
     profilePicKey : {
       type: String,
-      required: true
+      default: ""
+      // required: true
     },
     bio: {
       type: String,

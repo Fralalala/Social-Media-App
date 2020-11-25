@@ -265,13 +265,13 @@ export const updateUser = (
       const {data:{msg}} = await axios.delete("/api/s3", delConfig) 
 
     }
-
+    
     const { data } = await axios.put(
       "api/users",
       { newName, newEmail, newBio, newPassword, currentPassword, newProfilePicSrc, newProfilePicKey },
       config
     );
-
+    
     dispatch({
       type: USER_UPDATE_PROFILE_SUCCESS,
       payload: data,
@@ -279,7 +279,7 @@ export const updateUser = (
 
     alert("Info has been Updated");
   } catch (error) {
-    console.error(error);
+    alert("Wrong Password")
     dispatch({
       type: USER_UPDATE_PROFILE_FAIL,
       payload: error,

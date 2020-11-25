@@ -30,6 +30,8 @@ const ProfileScreen = ({ history }) => {
   const [images, setImage] = useState([]);
   const [bio, setBio] = useState("Loading Bio...");
 
+  const fileInput = useRef()
+
   useEffect(() => {
     if (!userInfo) {
       let id = JSON.parse(localStorage.getItem("token"));
@@ -49,18 +51,27 @@ const ProfileScreen = ({ history }) => {
   const submitHandler = async (e) => {
     e.preventDefault();
 
-    await dispatch(
-      post(
-        userInfo.profilePicSrc,
-        userInfo._id,
-        caption,
-        userInfo.name,
-        userInfo.uniqueName,
-        images
-      )
-    );
+    if (caption.replaceAll(" ", "").length > 0 || images.length > 0) {
+      await dispatch(
+        post(
+          userInfo.profilePicSrc,
+          userInfo._id,
+          caption,
+          userInfo.name,
+          userInfo.uniqueName,
+          images
+        )
+      );
 
-    dispatch(getAllPost([], userInfo.uniqueName));
+      fileInput.current.value = ""
+
+      setCaption("");
+      setImage([])
+
+      dispatch(getAllPost([], userInfo.uniqueName));
+    } else {
+      alert("Please Enter a Caption or an Image")
+    }
   };
 
   return (
@@ -70,7 +81,7 @@ const ProfileScreen = ({ history }) => {
         style={{ backgroundColor: "#393e46", marginBottom: "35px" }}
       >
         <Col md={2}>
-          <Image src={profilePic} roundedCircle style={{ height: "13rem" }} />
+          <Image src={profilePic} rounded style={{ width: "11rem" }} />
         </Col>
         <Col className="px-5" md={10}>
           <Row>
@@ -99,16 +110,19 @@ const ProfileScreen = ({ history }) => {
                         type="file"
                         id="image"
                         name="image"
+                        ref = {fileInput}
                         onChange={(e) => {
                           setImage(e.target.files);
-                          console.log(e.target.files);
                         }}
                       />
                     </Form.Group>
                   </Col>
 
                   <Col>
-                    <Button type="submit" style={{ float: "right", width: "9rem" }}>
+                    <Button
+                      type="submit"
+                      style={{ float: "right", width: "9rem" }}
+                    >
                       Post
                     </Button>
                   </Col>
@@ -125,11 +139,11 @@ const ProfileScreen = ({ history }) => {
             <Card.Body>{bio}</Card.Body>
           </Card>
 
-          <Image
+          {/* <Image
             src="https://cdna.artstation.com/p/assets/images/images/011/935/010/large/nicholas-kole-img-6296-copy.jpg?1532181241"
             rounded
             style={{ width: "100%" }}
-          />
+          /> */}
         </Col>
         <Col md={8} className="ml-auto">
           {posts.length < 1 && (

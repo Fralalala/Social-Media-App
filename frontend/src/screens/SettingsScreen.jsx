@@ -7,6 +7,7 @@ import {
   Row,
   Col,
   Card,
+  Spinner,
 } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { getLoggedInUser, updateUser } from "../actions/userActions";
@@ -21,7 +22,7 @@ const SettingsScreen = ({ history }) => {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [bio, setBio] = useState("");
-  const [images, setImages] = useState(null);
+  const [images, setImages] = useState([]);
 
   const [userProfilePicSrc, setUserProfilePicSrc] = useState(
     "https://252radio.com/wp-content/uploads/2016/11/default-user-image.png"
@@ -39,11 +40,14 @@ const SettingsScreen = ({ history }) => {
   const [isEditingEmail, setIsEditingEmail] = useState(false);
   const [isEditingPassword, setIsEditingPassword] = useState(false);
   const [isEditingBio, setIsEditingBio] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
 
-    dispatch(
+    setIsSubmitting(true)
+
+    await dispatch(
       updateUser(
         userInfo._id,
         name,
@@ -55,6 +59,8 @@ const SettingsScreen = ({ history }) => {
         userInfo.profilePicKey
       )
     );
+
+    setIsSubmitting(false)
   };
 
   useEffect(() => {
@@ -262,6 +268,8 @@ const SettingsScreen = ({ history }) => {
             </Row>
 
             <Button type="submit" variant="primary">
+              
+            <Spinner animation="grow" hidden={!isSubmitting} style={{verticalAlign : 'middle'}} />
               Save Changes
             </Button>
           </Form>
@@ -283,7 +291,7 @@ const SettingsScreen = ({ history }) => {
         </Col>
       </Row>
 
-      <Row className="mt-5">
+      {/* <Row className="mt-5">
         <Col className="border border-right-0 border-danger p-4" md={3}>
           <h4 md={6}>Delete Account?</h4>
         </Col>
@@ -299,7 +307,7 @@ const SettingsScreen = ({ history }) => {
             <i className="fas fa-user-slash"></i>
           </Button>
         </Col>
-      </Row>
+      </Row> */}
     </Container>
   );
 };

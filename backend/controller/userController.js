@@ -9,7 +9,7 @@ const registerUser = async (req, res) => {
 
     if (userExists || uniqueNameExist) {
       res.status(400);
-      throw new Error( 
+      throw new Error(
         "user or Link name exist already exist line 10 userController.js"
       );
     }
@@ -20,7 +20,7 @@ const registerUser = async (req, res) => {
       uniqueName,
       password,
       profilePicSrc: imgSrc,
-      profilePicKey: imgKey
+      profilePicKey: imgKey,
     });
 
     if (user) {
@@ -115,21 +115,22 @@ const updateUser = async (req, res) => {
       newBio,
       currentPassword,
       newProfilePicSrc,
-      newProfilePicKey
+      newProfilePicKey,
     } = req.body;
 
     const user = await User.findById(_id);
 
     const isMatch = await user.matchPassword(currentPassword);
 
-    if (user && (await user.matchPassword(currentPassword))) {
+    if (user && isMatch) {
       user.name = newName !== "" ? newName : user.name;
       user.email = newEmail !== "" ? newEmail : user.email;
       user.password = newPassword !== "" ? newPassword : user.password;
       user.bio = newBio !== "" ? newBio : user.bio;
       user.profilePicSrc =
         newProfilePicSrc !== "" ? newProfilePicSrc : user.profilePicSrc;
-      user.profilePicKey = newProfilePicKey !== "" ? newProfilePicKey : user.profilePicKey
+      user.profilePicKey =
+        newProfilePicKey !== "" ? newProfilePicKey : user.profilePicKey;
 
       const updatedUser = await user.save();
 
@@ -144,12 +145,11 @@ const updateUser = async (req, res) => {
         friends: updatedUser.friends,
       });
     } else {
-      res.status(404).json({
-        message: "Wrong password, try again",
-      });
-      // throw new Error("wrong password foo");
+      res.status(404)
+      throw new Error("wrong password foo");
     }
   } catch (error) {
+    console.log(error)
     res.status(500).send(error);
   }
 };

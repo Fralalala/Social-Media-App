@@ -41,9 +41,11 @@ const Post = ({
     <Card className="mb-5">
       <Card.Header>
         <Row>
-          <Col md={2}>
-            <Image src={posterImgSrc} roundedCircle style={{ width: "3rem" }} />
+        {/* style={{ backgroundImage: `url(${posterImgSrc})`, backgroundPosition: "center", transform: "scale(.5)" }} */}
+          <Col md={3} >
+            <Image src={posterImgSrc} fluid rounded  />
           </Col>
+          
           <Col style={{ paddingTop: "12px", marginLeft: "-20px" }}>
             <Card.Text>
               <h5>{posterName || posterUniqueName}</h5>
@@ -86,9 +88,9 @@ const Post = ({
             height: "20rem",
             padding: "0 20px 0 20px",
           }}
-          className= "postImg"
+          className="postImg"
           onClick={() => {
-            setIsCommenting(true)
+            setIsCommenting(true);
           }}
         />
       )}
@@ -110,14 +112,12 @@ const Post = ({
             <Modal
               show={isCommenting}
               onHide={() => setIsCommenting(false)}
-              size={'xl'}
+              size={"xl"}
               dialogClassName="modal-90w"
               aria-labelledby="example-custom-modal-styling-title"
             >
               <Modal.Header closeButton>
-                <Modal.Title>
-                  Picture
-                </Modal.Title>
+                <Modal.Title>Picture</Modal.Title>
               </Modal.Header>
               <Modal.Body>
                 <Image src={postImgSrc} fluid />

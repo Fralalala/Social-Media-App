@@ -68,7 +68,6 @@ export const userReducer = (state = { usersFriendsInfo: [], loading : false }, a
     case ADD_USER_FRIENDS_FAIL:
     case DELETE_USER_FRIENDS_FAIL:
     case USER_UPDATE_PROFILE_FAIL:
-      console.log(action.payload)
       return {
         ...state,
         loading: false,

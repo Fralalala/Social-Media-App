@@ -11,6 +11,7 @@ const RegisterScreen = ({ history }) => {
   const [name, setName] = useState("");
   const [uniqueName, setUniqueName] = useState("");
   const [profilePicSrc, setProfilePicSrc] = useState();
+  const [isRegistering, setIsRegistering] = useState(true)
 
   const dispatch = useDispatch();
   const userReducer = useSelector((state) => state.userReducer);
@@ -30,6 +31,7 @@ const RegisterScreen = ({ history }) => {
     if (password !== password2) {
       alert("Passwords do not match");
     } else {
+      setIsRegistering(false)
       dispatch(register(name, email, password, uniqueName, images));
     }
   };
@@ -117,7 +119,7 @@ const RegisterScreen = ({ history }) => {
               Login
             </Button>
 
-            <Spinner animation="grow" />
+            <Spinner animation="grow" hidden={isRegistering} />
 
           </Form>
         </Col>
@@ -131,7 +133,7 @@ const RegisterScreen = ({ history }) => {
               onClick={() => {
                 console.log(userInfo);
               }}
-            >
+            > 
               Find some peepz
             </h2>
             <h3>Lorem, ipsum dolor.</h3>
