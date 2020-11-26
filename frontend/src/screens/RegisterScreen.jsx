@@ -134,9 +134,9 @@ const RegisterScreen = ({ history }) => {
                 console.log(userInfo);
               }}
             > 
-              Find some peepz
+              Connect to different People
             </h2>
-            <h3>Lorem, ipsum dolor.</h3>
+            {/* <h3>Lorem, ipsum dolor.</h3> */}
           </Row>
         </Col>
       </Row>

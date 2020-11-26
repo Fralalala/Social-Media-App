@@ -103,8 +103,8 @@ const LoginScreen = ({ history }) => {
             className="mt-4 justify-content-md-center"
             style={{ height: "100%" }}
           >
-            <h2>Find your friends</h2>
-            <h3>Lorem, ipsum dolor.</h3>
+            <h2>Find a friend</h2>
+            {/* <h3>Lorem, ipsum dolor.</h3> */}
           </Row>
         </Col>
       </Row>
