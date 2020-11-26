@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   Accordion,
   Button,
@@ -34,6 +34,26 @@ const Post = ({
   const [isLiked, setIsLiked] = useState(false);
   const [isCommentsOpened, setIsCommentsOpened] = useState(false);
   const [isCommenting, setIsCommenting] = useState(false);
+  const [isRect, setIsRect] = useState(true);
+  const [isPortrait, setIsPortrait] = useState(false);
+
+  const picture = useRef();
+
+  useEffect(() => {
+    //check if square
+    if (picture.current.clientWidth === picture.current.clientHeight) {
+      setIsRect(true);
+      setIsPortrait(false);
+      //check if portait
+    } else if (picture.current.clientWidth < picture.current.clientHeight) {
+      setIsRect(false);
+      setIsPortrait(true);
+      //is rect
+    } else {
+      setIsRect(true);
+      setIsPortrait(false);
+    }
+  }, []);
 
   let comments = ["comment 1", "comment2", "com 3"];
 
@@ -41,12 +61,18 @@ const Post = ({
     <Card className="mb-5">
       <Card.Header>
         <Row>
-        {/* style={{ backgroundImage: `url(${posterImgSrc})`, backgroundPosition: "center", transform: "scale(.5)" }} */}
-          <Col md={3} >
-            <Image src={posterImgSrc} fluid rounded  />
+          {/* style={{ backgroundImage: `url(${posterImgSrc})`, backgroundPosition: "center", transform: "scale(.5)" }} */}
+          <Col md={3}>
+            <Image
+              ref={picture}
+              src={posterImgSrc}
+              fluid={isRect}
+              rounded
+              style={isPortrait ? { height: "5rem" } : {}}
+            />
           </Col>
-          
-          <Col style={{ paddingTop: "12px", marginLeft: "-20px" }}>
+
+          <Col style={isPortrait ? { paddingTop: "25px", marginLeft: "-100px" } : { paddingTop: "15px", marginLeft: "-20px" }}>
             <Card.Text>
               <h5>{posterName || posterUniqueName}</h5>
             </Card.Text>

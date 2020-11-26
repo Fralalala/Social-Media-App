@@ -116,15 +116,15 @@ const RegisterScreen = ({ history }) => {
             </FormGroup>
 
             <Button type="submit" variant="primary">
-              Login
+              Register
+            <Spinner animation="grow" hidden={isRegistering} />
             </Button>
 
-            <Spinner animation="grow" hidden={isRegistering} />
 
           </Form>
         </Col>
 
-        <Col md={5}>
+        <Col md={6}>
           <Row
             className="mt-4 justify-content-md-center"
             style={{ height: "100%" }}
