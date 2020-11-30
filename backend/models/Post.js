@@ -16,25 +16,23 @@ const commentSchema = mongoose.Schema({
 });
 
 const postSchema = mongoose.Schema(
-  //add the normal name of the poster
-
   {
-    posterImgSrc: {
-      type: String,
-      required: true,
-    },
+    // posterImgSrc: {
+    //   type: String,
+    //   required: true,
+    // },
     posterId: {
       type: String,
       required: true,
     },
-    posterName: {
-      type: String,
-      required: true,
-    },
-    posterUniqueName: {
-      type: String,
-      required: true,
-    },
+    // posterName: {
+    //   type: String,
+    //   required: true,
+    // },
+    // posterUniqueName: {
+    //   type: String,
+    //   required: true,
+    // },
     postImgSrc: {
       type: String,
     },

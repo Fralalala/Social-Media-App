@@ -1,29 +1,111 @@
-import React, { useState, useEffect } from "react";
-import { Form, Button, Row, Col, Container, FormGroup, Spinner } from "react-bootstrap";
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import {
+  Form,
+  Button,
+  Row,
+  Col,
+  Container,
+  FormGroup,
+  Spinner,
+  Image,
+} from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { register } from "../actions/userActions";
+import ReactCrop from "react-image-crop";
+import "react-image-crop/dist/ReactCrop.css";
+
+const pixelRatio = window.devicePixelRatio || 1;
 
 const RegisterScreen = ({ history }) => {
+  const dispatch = useDispatch();
+  const userReducer = useSelector((state) => state.userReducer);
+  const { userInfo } = userReducer;
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
   const [name, setName] = useState("");
   const [uniqueName, setUniqueName] = useState("");
-  const [profilePicSrc, setProfilePicSrc] = useState();
-  const [isRegistering, setIsRegistering] = useState(true)
+  const [isRegistering, setIsRegistering] = useState(true);
+  const [imageName, setImageName] = useState();
+  const [image, setImage] = useState();
+  const [imageUrl, setImageUrl] = useState();
 
-  const dispatch = useDispatch();
-  const userReducer = useSelector((state) => state.userReducer);
-  const { userInfo } = userReducer;
+  const [upImg, setUpImg] = useState();
+  const imgRef = useRef(null);
+  const previewCanvasRef = useRef(null);
+  const [completedCrop, setCompletedCrop] = useState(null);
 
-  const [images, setImages] = useState()
+  const [crop, setCrop] = useState({
+    unit: "%",
+    width: 30,
+    aspect: 1,
+  });
 
-  useEffect(() => {
+  const [canvasBlob, setCanvasBlob] = useState();
+
+  useEffect(async () => {
     if (userInfo) {
       history.push("/");
     }
-  }, [userInfo]);
+
+    //#region on complete crop
+
+    if (!completedCrop || !previewCanvasRef.current || !imgRef.current) {
+      return;
+    } else {
+      const image = imgRef.current;
+      const canvas = previewCanvasRef.current;
+      const crop = completedCrop;
+
+      const scaleX = image.naturalWidth / image.width;
+      const scaleY = image.naturalHeight / image.height;
+      const ctx = canvas.getContext("2d");
+
+      canvas.width = crop.width * pixelRatio;
+      canvas.height = crop.height * pixelRatio;
+
+      ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+      ctx.imageSmoothingQuality = "high";
+
+      ctx.drawImage(
+        image,
+        crop.x * scaleX,
+        crop.y * scaleY,
+        crop.width * scaleX,
+        crop.height * scaleY,
+        0,
+        0,
+        crop.width,
+        crop.height
+      );
+
+      setImage(
+        await new Promise((resolve, reject) => {
+          canvas.toBlob(
+            (blob) => {
+              if (!blob) {
+                //reject(new Error('Canvas is empty'));
+                // console.error("Canvas is empty");
+                resolve(null);
+                setImageUrl("");
+                return;
+              }
+              blob.name = imageName;
+              // console.log(blob);
+              resolve(blob);
+              setImageUrl(canvas.toDataURL("image/jpeg"));
+            },
+            "image/jpeg",
+            1
+          );
+        })
+      );
+    }
+
+    //#endregion
+  }, [userInfo, completedCrop, history, imageName]);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -31,13 +113,35 @@ const RegisterScreen = ({ history }) => {
     if (password !== password2) {
       alert("Passwords do not match");
     } else {
-      setIsRegistering(false)
-      dispatch(register(name, email, password, uniqueName, images));
+      setIsRegistering(false);
+
+      if(image === null) {
+        alert("Crop before Registering")
+      } else {
+        dispatch(register(name, email, password, uniqueName, image));
+        
+      }
+
     }
   };
 
+  const onSelectFile = (e) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const reader = new FileReader();
+      //reader.result is the data url, in this case : img Url
+      reader.addEventListener("load", () => setUpImg(reader.result));
+      reader.readAsDataURL(e.target.files[0]);
+      console.log("object");
+    }
+  };
+
+  const onLoad = useCallback((img) => {
+    console.log(img);
+    imgRef.current = img;
+  }, []);
+
   return (
-    <Container className="mt-4 "  >
+    <Container className="mt-4 ">
       <Row>
         <Col md={6}>
           <h1>Create an Account</h1>
@@ -77,22 +181,19 @@ const RegisterScreen = ({ history }) => {
               ></Form.Control>
             </FormGroup>
 
-
             <FormGroup>
-            <Form.Label>Profile Pic File</Form.Label>
-                <Form.File
-                  type="file"
-                  id="image"
-                  name="image"
-                  onChange={(e) => {
-                    setImages(e.target.files)
-                  }}
-                  required
-                >
-
-                </Form.File>
+              <Form.Label>Profile Pic File</Form.Label>
+              <Form.File
+                type="file"
+                id="image"
+                name="image"
+                onChange={(e) => {
+                  onSelectFile(e);
+                  setImageName(e.target.files[0].name);
+                }}
+                required
+              ></Form.File>
             </FormGroup>
-
 
             <FormGroup>
               <Form.Label>Password</Form.Label>
@@ -117,27 +218,44 @@ const RegisterScreen = ({ history }) => {
 
             <Button type="submit" variant="primary">
               Register
-            <Spinner animation="grow" hidden={isRegistering} />
+              <Spinner animation="grow" hidden={isRegistering} />
             </Button>
-
-
           </Form>
         </Col>
 
         <Col md={6}>
-          <Row
-            className="mt-4 justify-content-md-center"
-            style={{ height: "100%" }}
-          >
-            <h2
-              onClick={() => {
-                console.log(userInfo);
+
+          <ReactCrop
+            src={upImg}
+            crop={crop}
+            ruleOfThirds
+            onImageLoaded={onLoad}
+            onChange={(c) => setCrop(c)}
+            onComplete={(c) => setCompletedCrop(c)}
+          />
+
+          <div>
+            <canvas
+              ref={previewCanvasRef}
+              // Rounding is important so the canvas width and height matches/is a multiple for sharpness.
+              style={{
+                width: Math.round(completedCrop?.width ?? 0),
+                height: Math.round(completedCrop?.height ?? 0),
+                minWidth: "250px",
+                minHeight: "250px",
+                maxWidth: "250px",
+                maxHeight: "250px"
               }}
-            > 
-              Connect to different People
-            </h2>
-            {/* <h3>Lorem, ipsum dolor.</h3> */}
-          </Row>
+            />
+          </div>
+
+          <Button
+            onClick={() => {
+              console.log(image);
+            }}
+          >
+            Button
+          </Button>
         </Col>
       </Row>
 

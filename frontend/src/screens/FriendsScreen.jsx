@@ -31,7 +31,6 @@ const FriendsScreen = ({ history }) => {
   useEffect(() => {
     if (!userInfo) {
       let id = JSON.parse(localStorage.getItem("token"));
-      console.log('user info in false')
       if (id) {
         dispatch(getLoggedInUser(id));
       } else {

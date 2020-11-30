@@ -46,7 +46,6 @@ const registerUser = async (req, res) => {
 const getDetails = async (req, res) => {
   try {
     const { _id } = req.headers;
-
     // when finding an Id, it must be named _id
     const {
       profilePicSrc,

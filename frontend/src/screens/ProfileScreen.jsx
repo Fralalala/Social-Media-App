@@ -12,7 +12,7 @@ import Post from "../components/Post";
 
 import { useDispatch, useSelector } from "react-redux";
 import { getLoggedInUser } from "../actions/userActions";
-import { getAllPost, post, uploadFile } from "../actions/postAction";
+import { getAllPost, post } from "../actions/postAction";
 
 const ProfileScreen = ({ history }) => {
   const dispatch = useDispatch();
@@ -43,7 +43,7 @@ const ProfileScreen = ({ history }) => {
       }
     } else {
       setProfilePic(userInfo.profilePicSrc);
-      dispatch(getAllPost([], userInfo.uniqueName));
+      dispatch(getAllPost([], userInfo._id));
       setBio(userInfo.bio);
     }
   }, [userInfo, dispatch, history]);
@@ -68,7 +68,7 @@ const ProfileScreen = ({ history }) => {
       setCaption("");
       setImage([])
 
-      dispatch(getAllPost([], userInfo.uniqueName));
+      dispatch(getAllPost([], userInfo._id));
     } else {
       alert("Please Enter a Caption or an Image")
     }
@@ -157,11 +157,10 @@ const ProfileScreen = ({ history }) => {
             return (
               <Post
                 postImgSrc={post.postImgSrc}
-                posterUniqueName={post.posterUniqueName}
+                // posterUniqueName={post.posterUniqueName}
                 postCaption={post.postCaption}
-                posterImgSrc={post.posterImgSrc}
                 postImgKey={post.postImgKey}
-                posterName={post.posterName}
+                posterId = {post.posterId}
                 _id={post._id}
                 key={post._id}
               />

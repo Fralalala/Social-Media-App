@@ -23,13 +23,9 @@ import {
   USER_UPDATE_PROFILE_SUCCESS,
 } from "../constants/userConstants";
 
-export const register = (
-  name,
-  email,
-  password,
-  uniqueName,
-  images
-) => async (dispatch) => {
+export const register = (name, email, password, uniqueName, image) => async (
+  dispatch
+) => {
   try {
     dispatch({ type: USER_REGISTER_REQUEST });
 
@@ -39,15 +35,13 @@ export const register = (
       },
     };
 
+    let formData = new FormData();
 
-      let formData = new FormData();
+    formData.append("image", image, image.name);
 
-      formData.append("image", images[0], images[0].name);
-  
-      const {
-        data: { imgSrc, imgKey },
-      } = await axios.post("/api/s3", formData);
-    
+    const {
+      data: { imgSrc, imgKey },
+    } = await axios.post("/api/s3", formData);
 
     const { data } = await axios.post(
       "/api/users",
@@ -251,27 +245,36 @@ export const updateUser = (
         data: { imgSrc, imgKey },
       } = await axios.post("/api/s3", formData);
 
-      newProfilePicSrc = imgSrc
-      newProfilePicKey = imgKey
+      newProfilePicSrc = imgSrc;
+      newProfilePicKey = imgKey;
 
       const delConfig = {
         headers: {
           "Content-Type": "application/json",
-          previousProfilePicKey
+          previousProfilePicKey,
         },
       };
 
       //delete previous profile pic in s3
-      const {data:{msg}} = await axios.delete("/api/s3", delConfig) 
-
+      const {
+        data: { msg },
+      } = await axios.delete("/api/s3", delConfig);
     }
-    
+
     const { data } = await axios.put(
       "api/users",
-      { newName, newEmail, newBio, newPassword, currentPassword, newProfilePicSrc, newProfilePicKey },
+      {
+        newName,
+        newEmail,
+        newBio,
+        newPassword,
+        currentPassword,
+        newProfilePicSrc,
+        newProfilePicKey,
+      },
       config
     );
-    
+
     dispatch({
       type: USER_UPDATE_PROFILE_SUCCESS,
       payload: data,
@@ -279,7 +282,7 @@ export const updateUser = (
 
     alert("Info has been Updated");
   } catch (error) {
-    alert("Wrong Password")
+    alert("Wrong Password");
     dispatch({
       type: USER_UPDATE_PROFILE_FAIL,
       payload: error,
@@ -287,6 +290,3 @@ export const updateUser = (
   }
 };
 
-export const sample = () => {
-  
-}

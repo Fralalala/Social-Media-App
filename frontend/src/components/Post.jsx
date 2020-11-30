@@ -1,27 +1,24 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
-  Accordion,
   Button,
   Card,
   Col,
   Dropdown,
-  Form,
   Image,
   Modal,
   Row,
 } from "react-bootstrap";
-
+import Avatar from "react-avatar";
 import { useDispatch, useSelector } from "react-redux";
 import { deletePost, getAllPost } from "../actions/postAction";
+import axios from 'axios'
 
 const Post = ({
-  posterImgSrc,
   postCaption,
-  posterName,
-  posterUniqueName,
   postImgSrc,
   postImgKey,
-  _id,
+  posterId,
+  _id
 }) => {
   // const postReducer = useSelector((state) => state.postReducer);
   // const { posts, loading } = postReducer;
@@ -32,58 +29,56 @@ const Post = ({
   const dispatch = useDispatch();
 
   const [isLiked, setIsLiked] = useState(false);
-  const [isCommentsOpened, setIsCommentsOpened] = useState(false);
   const [isCommenting, setIsCommenting] = useState(false);
-  const [isRect, setIsRect] = useState(true);
-  const [isPortrait, setIsPortrait] = useState(false);
 
-  const picture = useRef();
+  const [posterName, setPosterName] = useState('Loading name...')
+  const [posterImgSrc, setPosterImgSrc] = useState('')
 
-  useEffect(() => {
-    //check if square
-    if (picture.current.clientWidth === picture.current.clientHeight) {
-      setIsRect(true);
-      setIsPortrait(false);
-      //check if portait
-    } else if (picture.current.clientWidth < picture.current.clientHeight) {
-      setIsRect(false);
-      setIsPortrait(true);
-      //is rect
-    } else {
-      setIsRect(true);
-      setIsPortrait(false);
+  useEffect( () => {
+
+    //if using axios, must be put in a container and then run the said container
+
+    const getPoster = async () => {
+
+      const config = {
+        headers: {
+          "Content-Type" : "application/json",
+          _id : posterId
+        }
+      }
+
+      const {data: {name, profilePicSrc} } = await axios.get("api/users", config)
+
+    setPosterName(name)
+    setPosterImgSrc(profilePicSrc)
     }
-  }, []);
 
-  let comments = ["comment 1", "comment2", "com 3"];
+    getPoster()
+    
+ 
+  }, []);
 
   return (
     <Card className="mb-5">
       <Card.Header>
         <Row>
-          {/* style={{ backgroundImage: `url(${posterImgSrc})`, backgroundPosition: "center", transform: "scale(.5)" }} */}
-          <Col md={3}>
-            <Image
-              ref={picture}
-              src={posterImgSrc}
-              fluid={isRect}
-              rounded
-              style={isPortrait ? { height: "5rem" } : {}}
-            />
+          <Col  md="auto" >
+
+            <Avatar src={posterImgSrc} size="45px" round />
           </Col>
 
-          <Col style={isPortrait ? { paddingTop: "25px", marginLeft: "-100px" } : { paddingTop: "15px", marginLeft: "-20px" }}>
-            <Card.Text>
-              <h5>{posterName || posterUniqueName}</h5>
+          <Col>
+            <Card.Text style={{verticalAlign: "middle"}} >
+              <p style={{marginBottom: "0", fontStyle: "italic"}} > {posterName} </p>
+              <p style={{margin: "0", padding: "0", fontSize: "12px", color: "gray", fontStyle: "italic"}} >date this is posted</p>
             </Card.Text>
           </Col>
-          <Dropdown className="ml-auto mr-3">
-            <Dropdown.Toggle id="dropdown-basic" />
+          <Dropdown className="ml-auto mr-3" hidden={toString(userInfo._id) === toString(posterId)} >
+            <Dropdown.Toggle id="dropdown-basic" /> 
 
             <Dropdown.Menu>
               <Dropdown.Item
                 onClick={async () => {
-                  // console.log(postImgKey)
 
                   await dispatch(deletePost(postImgKey, _id));
 

@@ -13,7 +13,7 @@ import {
 } from "../constants/postConstant";
 import { USER_SIGN_OUT } from "../constants/userConstants";
 
-export const getAllPost = (friends, uniqueName) => async (dispatch) => {
+export const getAllPost = (friends, _id) => async (dispatch) => {
   try {
     dispatch({ type: GET_POST_REQUEST });
 
@@ -21,7 +21,7 @@ export const getAllPost = (friends, uniqueName) => async (dispatch) => {
       headers: {
         "Content-Type": "application/json",
         friends,
-        userUniqueName: uniqueName,
+        _id,
       },
     };
 

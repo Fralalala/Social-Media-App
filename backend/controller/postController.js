@@ -2,19 +2,13 @@ import Post from "../models/Post.js";
 
 const getPosts = async (req, res) => {
   try {
-    const { friends, useruniquename } = req.headers;
+    const { friends, _id } = req.headers;
 
     let myFriends = friends.split(",");
 
-    let allPosts = [];
-
-    let friendsPosts = [];
-
-    friendsPosts = await Post.find({
-      posterUniqueName: { $in: [...myFriends, useruniquename] },
-    }).sort("-createdAt");
-
-    allPosts = [...allPosts, ...friendsPosts];
+    let allPosts = await Post.find({
+      posterId: { $in: [...myFriends, _id] }
+    }).sort("-createdAt")
 
     res.status(200).json({
       allPosts,

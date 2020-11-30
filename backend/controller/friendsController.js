@@ -14,14 +14,15 @@ const addFriends = async (req, res) => {
       throw new Error("user ");
     } else {
       for (let index = 0; index < user.friends.length; index++) {
-        if (user.friends[index] === friend.uniqueName) {
+
+        if (toString(friend._id) === toString(user.friends[index])) {
           res.status(500);
           throw new Error("already a friend");
           break;
         }
       }
 
-      user.friends = [...user.friends, friend.uniqueName];
+      user.friends = [...user.friends, friend._id];
 
       const updatedUser = await user.save();
 
@@ -34,7 +35,7 @@ const addFriends = async (req, res) => {
         _id: updatedUser._id,
         name: updatedUser.name,
         uniqueName: updatedUser.uniqueName,
-         email: updatedUser.email
+        email: updatedUser.email,
       });
     }
   } catch (error) {
@@ -49,10 +50,10 @@ const getFriends = async (req, res) => {
     const { friends } = await User.findById(_id);
 
     let myFriends = await User.find({
-      uniqueName: { $in: [...friends] },
+      _id: { $in: [...friends] },
     }).select("name bio profilePicSrc uniqueName");
 
-    // myFriends = myFriends.length < 1 ? myFriends : ['You have no friends :/    '] 
+    // myFriends = myFriends.length < 1 ? myFriends : ['You have no friends :/    ']
 
     res.status(201).json({
       myFriends,
@@ -76,22 +77,21 @@ const deleteFriends = async (req, res) => {
       const updatedUser = user.save();
 
       res.status(201).json({
-       profilePicSrc: updatedUser.profilePicSrc,
-       bio: updatedUser.profilePicSrc,
-       friends: updatedUser.friends,
-       _id: updatedUser._id,
-       name: updatedUser.name,
-       uniqueName: updatedUser.uniqueName,
-        email: updatedUser.email
+        profilePicSrc: updatedUser.profilePicSrc,
+        bio: updatedUser.profilePicSrc,
+        friends: updatedUser.friends,
+        _id: updatedUser._id,
+        name: updatedUser.name,
+        uniqueName: updatedUser.uniqueName,
+        email: updatedUser.email,
       });
     } else {
       res.status(501).send("LAALALLA");
     }
   } catch (error) {
-      console.log(error)
+    console.log(error);
     res.status(500).send(error);
   }
 };
-  
 
-export { getFriends, addFriends , deleteFriends};
+export { getFriends, addFriends, deleteFriends };

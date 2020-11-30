@@ -30,7 +30,7 @@ const HomeScreen = ({ history }) => {
         history.push("/login");
       }
     } else {
-      dispatch(getAllPost(userInfo.friends, userInfo.uniqueName));
+      dispatch(getAllPost(userInfo.friends, userInfo._id));
       setProfilePicture(userInfo.profilePicSrc);
       setName(userInfo.name);
     }
@@ -39,8 +39,8 @@ const HomeScreen = ({ history }) => {
   return (
     <Container>
       <Row>
-        <Col md={3}>
-          <Card className="mb-3" style={{}}>
+        <Col md="auto">
+          <Card className="mb-3">
             <Card.Body>
               <Image
                 src={profilePicture}
@@ -48,15 +48,6 @@ const HomeScreen = ({ history }) => {
                 rounded
                 style={{ width: "11rem" }}
               />
-              {/* <Link to="/profile">
-                <Card.Text as="p">{name}</Card.Text>
-              </Link>
-              <Link to="/settings">
-                <Card.Text>Settings</Card.Text>
-              </Link>
-              <Link to="/friends">
-                <Card.Text>Friends</Card.Text>
-              </Link> */}
             </Card.Body>
           </Card>
         </Col>
@@ -75,14 +66,14 @@ const HomeScreen = ({ history }) => {
           )}
 
           {posts.length > 0 ? (
-            posts.map((post) => {
+          posts.map((post) => {
               return (
                 <Post
                   postImgSrc={post.postImgSrc}
-                  posterUniqueName={post.posterUniqueName}
+                  // posterUniqueName={post.posterUniqueName}
                   postCaption={post.postCaption}
-                  posterImgSrc={post.posterImgSrc}
                   postImgKey={post.postImgKey}
+                  posterId = {post.posterId}
                   _id={post._id}
                   key={post._id}
                 />
