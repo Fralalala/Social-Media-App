@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import {
   Button,
   Container,
@@ -11,6 +11,9 @@ import {
 } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { getLoggedInUser, updateUser } from "../actions/userActions";
+import ReactCrop from "react-image-crop";
+
+const pixelRatio = window.devicePixelRatio || 1;
 
 const SettingsScreen = ({ history }) => {
   const dispatch = useDispatch();
@@ -40,12 +43,25 @@ const SettingsScreen = ({ history }) => {
   const [isEditingEmail, setIsEditingEmail] = useState(false);
   const [isEditingPassword, setIsEditingPassword] = useState(false);
   const [isEditingBio, setIsEditingBio] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const [upImg, setUpImg] = useState();
+  const imgRef = useRef(null);
+  const [completedCrop, setCompletedCrop] = useState(null);
+  const previewCanvasRef = useRef();
+  const [imageName, setImageName] = useState();
+  const [image, setImage] = useState();
+
+  const [crop, setCrop] = useState({
+    unit: "%",
+    width: 30,
+    aspect: 1,
+  });
 
   const submitHandler = async (e) => {
     e.preventDefault();
 
-    setIsSubmitting(true)
+    setIsSubmitting(true);
 
     await dispatch(
       updateUser(
@@ -55,15 +71,15 @@ const SettingsScreen = ({ history }) => {
         bio,
         password,
         currentPassword,
-        images,
+        image,
         userInfo.profilePicKey
       )
     );
 
-    setIsSubmitting(false)
+    setIsSubmitting(false);
   };
 
-  useEffect(() => {
+  useEffect(async () => {
     if (!userInfo) {
       let id = JSON.parse(localStorage.getItem("token"));
 
@@ -77,7 +93,77 @@ const SettingsScreen = ({ history }) => {
       setUserBio(userInfo.bio);
       setCardUserName(userInfo.name);
     }
-  }, [userInfo, history, dispatch]);
+
+    //#region on complete crop
+
+    if (!completedCrop || !previewCanvasRef.current || !imgRef.current) {
+      return;
+    } else {
+      const image = imgRef.current;
+      const canvas = previewCanvasRef.current;
+      const crop = completedCrop;
+
+      const scaleX = image.naturalWidth / image.width;
+      const scaleY = image.naturalHeight / image.height;
+      const ctx = canvas.getContext("2d");
+
+      canvas.width = crop.width * pixelRatio;
+      canvas.height = crop.height * pixelRatio;
+
+      ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+      ctx.imageSmoothingQuality = "high";
+
+      ctx.drawImage(
+        image,
+        crop.x * scaleX,
+        crop.y * scaleY,
+        crop.width * scaleX,
+        crop.height * scaleY,
+        0,
+        0,
+        crop.width,
+        crop.height
+      );
+
+      setImage(
+        await new Promise((resolve, reject) => {
+          canvas.toBlob(
+            (blob) => {
+              if (!blob) {
+                //reject(new Error('Canvas is empty'));
+                // console.error("Canvas is empty");
+                resolve(null);
+                return;
+              }
+              blob.name = imageName;
+              // console.log(blob);
+              resolve(blob);
+            },
+            "image/jpeg",
+            1
+          );
+        })
+      );
+    }
+
+    //#endregion
+
+  }, [userInfo, history, dispatch, imageName, completedCrop]);
+
+  const onSelectFile = (e) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const reader = new FileReader();
+      //reader.result is the data url, in this case : img Url
+      reader.addEventListener("load", () => setUpImg(reader.result));
+      reader.readAsDataURL(e.target.files[0]);
+      console.log("object");
+    }
+  };
+
+  const onLoad = useCallback((img) => {
+    console.log(img);
+    imgRef.current = img;
+  }, []);
 
   return (
     <Container>
@@ -230,7 +316,11 @@ const SettingsScreen = ({ history }) => {
                     type="file"
                     id="image"
                     name="image"
-                    onChange={(e) => setImages(e.target.files)}
+                    onChange={(e) => {
+                      onSelectFile(e);
+                      setImageName(e.target.files[0].name);
+                      setImages(e.target.files)
+                    }}
                   ></Form.File>
                 </FormGroup>
               </Col>
@@ -268,46 +358,43 @@ const SettingsScreen = ({ history }) => {
             </Row>
 
             <Button type="submit" variant="primary">
-              
-            <Spinner animation="grow" hidden={!isSubmitting} style={{verticalAlign : 'middle'}} />
+              <Spinner
+                animation="grow"
+                hidden={!isSubmitting}
+                style={{ verticalAlign: "middle" }}
+              />
               Save Changes
             </Button>
           </Form>
         </Col>
 
-        <Col md={3}>
-          <Card style={{ width: "17rem" }}>
+        <Col md={6}>
+          <ReactCrop
+            src={upImg}
+            crop={crop}
+            ruleOfThirds
+            onImageLoaded={onLoad}
+            onChange={(c) => setCrop(c)}
+            onComplete={(c) => setCompletedCrop(c)}
+          />
 
-            <Card.Img src={userProfilePicSrc} />
+          <div>
+            <canvas
+              ref={previewCanvasRef}
+              // Rounding is important so the canvas width and height matches/is a multiple for sharpness.
+              style={{
+                width: Math.round(completedCrop?.width ?? 0),
+                height: Math.round(completedCrop?.height ?? 0),
+                minWidth: "250px",
+                minHeight: "250px",
+                maxWidth: "250px",
+                maxHeight: "250px",
+              }}
+            />
+          </div>
 
-            <Card.Body style={{}}>
-              <Card.Title className="" style={{ textAlign: "center" }}>
-                <h4> {cardUserName} </h4>
-              </Card.Title>
-              {userBio}
-              {/* <div style={{ marginTop: "5px" }}>Joined since ...</div> */}
-            </Card.Body>
-          </Card>
         </Col>
       </Row>
-
-      {/* <Row className="mt-5">
-        <Col className="border border-right-0 border-danger p-4" md={3}>
-          <h4 md={6}>Delete Account?</h4>
-        </Col>
-
-        <Col className="border  border-left-0 border-danger p-4" md={3}>
-          <Button
-            style={{ display: "block", marginLeft: "auto" }}
-            md={6}
-            onClick={(e) => {
-              setIsEditingPassword(!isEditingPassword);
-            }}
-          >
-            <i className="fas fa-user-slash"></i>
-          </Button>
-        </Col>
-      </Row> */}
     </Container>
   );
 };

@@ -3,7 +3,7 @@ import { Button, Card } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteFriends, getFriends, getLoggedInUser } from "../actions/userActions";
 
-const FriendCard = ({ name, bio, profilePicSrc, uniqueName, history }) => {
+const FriendCard = ({ name, bio, profilePicSrc, uniqueName, history, _id }) => {
   const dispatch = useDispatch();
 
   const userReducer = useSelector((state) => state.userReducer);
@@ -34,7 +34,7 @@ const FriendCard = ({ name, bio, profilePicSrc, uniqueName, history }) => {
           <Button
             className="ml-3"
             onClick={async() => {
-              await dispatch(deleteFriends(userInfo._id, uniqueName));
+              await dispatch(deleteFriends(userInfo._id, _id));
 
               dispatch(getFriends(userInfo._id));
             }}

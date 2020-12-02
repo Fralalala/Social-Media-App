@@ -1,6 +1,6 @@
 import React, { Fragment } from "react";
 import { useEffect, useState } from "react";
-import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap";
+import { Navbar, Nav, Container } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { LinkContainer } from "react-router-bootstrap";
 import { logout } from "../actions/postAction";
@@ -18,8 +18,6 @@ const Header = () => {
       setisLoggedIn(false);
     }
   }, [userInfo]);
-
-  const {} = userReducer;
 
   return (
     <header>

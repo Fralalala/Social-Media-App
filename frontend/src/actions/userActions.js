@@ -153,20 +153,21 @@ export const getFriends = (_id) => async (dispatch) => {
   }
 };
 
-export const addFriends = (uniqueName, _id) => async (dispatch) => {
+export const addFriends = (userId, friendId) => async (dispatch) => {
   try {
     dispatch({ type: ADD_USER_FRIENDS_REQUEST });
 
     const config = {
       headers: {
         "Content-Type": "application/json",
-        _id,
+        _id : userId,
       },
     };
 
+
     const { data } = await axios.post(
       "api/users/friends",
-      { uniqueName },
+      { friendId  },
       config
     );
 
@@ -182,7 +183,7 @@ export const addFriends = (uniqueName, _id) => async (dispatch) => {
   }
 };
 
-export const deleteFriends = (_id, friendUniqueName) => async (dispatch) => {
+export const deleteFriends = (_id, friendId) => async (dispatch) => {
   try {
     dispatch({
       type: DELETE_USER_FRIENDS_REQUEST,
@@ -192,7 +193,7 @@ export const deleteFriends = (_id, friendUniqueName) => async (dispatch) => {
       headers: {
         "Content-Type": "application/json",
         _id,
-        friendUniqueName,
+        friendId,
       },
     };
 
@@ -217,7 +218,7 @@ export const updateUser = (
   newBio,
   newPassword,
   currentPassword,
-  images,
+  image,
   previousProfilePicKey
 ) => async (dispatch) => {
   try {
@@ -234,12 +235,13 @@ export const updateUser = (
 
     let newProfilePicSrc = "";
     let newProfilePicKey = "";
-
-    if (images.length > 0) {
+console.log('asd')
+    if (image !== null) {
       let formData = new FormData();
 
-      formData.append("image", images[0], images[0].name);
+      formData.append("image", image, image.name);
 
+console.log('asd')
       //upload new profile pic to s3
       const {
         data: { imgSrc, imgKey },
@@ -251,7 +253,7 @@ export const updateUser = (
       const delConfig = {
         headers: {
           "Content-Type": "application/json",
-          previousProfilePicKey,
+          previousProfilePicKey, 
         },
       };
 
@@ -260,6 +262,8 @@ export const updateUser = (
         data: { msg },
       } = await axios.delete("/api/s3", delConfig);
     }
+    console.log('asd')
+    console.log('asd')
 
     const { data } = await axios.put(
       "api/users",
@@ -282,8 +286,8 @@ export const updateUser = (
 
     alert("Info has been Updated");
   } catch (error) {
-    alert("Wrong Password");
-    dispatch({
+    alert("error");
+    dispatch({ 
       type: USER_UPDATE_PROFILE_FAIL,
       payload: error,
     });

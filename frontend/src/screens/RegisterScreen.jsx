@@ -43,7 +43,7 @@ const RegisterScreen = ({ history }) => {
     aspect: 1,
   });
 
-  const [canvasBlob, setCanvasBlob] = useState();
+  // const [canvasBlob, setCanvasBlob] = useState();
 
   useEffect(async () => {
     if (userInfo) {
@@ -118,7 +118,7 @@ const RegisterScreen = ({ history }) => {
       if(image === null) {
         alert("Crop before Registering")
       } else {
-        dispatch(register(name, email, password, uniqueName, image));
+        dispatch(register(name,  email, password, uniqueName, image));
         
       }
 
@@ -249,13 +249,6 @@ const RegisterScreen = ({ history }) => {
             />
           </div>
 
-          <Button
-            onClick={() => {
-              console.log(image);
-            }}
-          >
-            Button
-          </Button>
         </Col>
       </Row>
 

@@ -115,7 +115,7 @@ export const deletePost = (postImgKey, _id) => async (dispatch) => {
       },
     };
 
-    const { data } = await axios.delete("/api/post", config);
+    await axios.delete("/api/post", config);
 
     dispatch({
       type: DELETE_POST_SUCCESS

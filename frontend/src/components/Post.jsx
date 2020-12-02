@@ -56,7 +56,7 @@ const Post = ({
     getPoster()
     
  
-  }, []);
+  }, [posterId]);
 
   return (
     <Card className="mb-5">
@@ -70,7 +70,7 @@ const Post = ({
           <Col>
             <Card.Text style={{verticalAlign: "middle"}} >
               <p style={{marginBottom: "0", fontStyle: "italic"}} > {posterName} </p>
-              <p style={{margin: "0", padding: "0", fontSize: "12px", color: "gray", fontStyle: "italic"}} >date this is posted</p>
+              {/* <p style={{margin: "0", padding: "0", fontSize: "12px", color: "gray", fontStyle: "italic"}} >date this is posted</p> */}
             </Card.Text>
           </Col>
           <Dropdown className="ml-auto mr-3" hidden={toString(userInfo._id) === toString(posterId)} >
@@ -155,31 +155,6 @@ const Post = ({
           </Col>
         </Row>
       </Card.Body>
-      {/* <>
-        <Accordion>
-          <Card.Header>
-            <Card.Header>
-              <Accordion.Toggle
-                as={Button}
-                variant="link"
-                eventKey="0"
-                onClick={(e) => {
-                  setIsCommentsOpened(!isCommentsOpened);
-                }}
-              >
-                {isCommentsOpened ? "Hide Comments" : "See Comments"}
-              </Accordion.Toggle>
-            </Card.Header> */}
-
-      {/* use parenthesis in the methods instead of curly brackets */}
-      {/* {comments.map((comment) => (
-              <Accordion.Collapse eventKey="0" key={comment}>
-                <Card.Body>{comment}</Card.Body>
-              </Accordion.Collapse>
-            ))}
-          </Card.Header>
-        </Accordion> */}
-      {/* </> */}
     </Card>
   );
 };
