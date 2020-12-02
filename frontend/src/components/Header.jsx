@@ -40,6 +40,12 @@ const Header = () => {
             <Nav className="ml-auto">
               {isLoggedIn === true ? (
                 <Fragment>
+                  
+                  <LinkContainer to="/search">
+                    <Nav.Link>
+                      <i className="fas fa-search"></i> Search
+                    </Nav.Link>
+                  </LinkContainer>
                   <LinkContainer to="/profile">
                     <Nav.Link>
                       <i className="fas fa-user-circle"></i> Profile

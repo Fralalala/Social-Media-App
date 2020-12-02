@@ -3,10 +3,12 @@ import thunk from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
 import { userReducer } from "./reducers/userReducer";
 import { postReducer } from "./reducers/postReducers"
+import { searchReducer } from "./reducers/searchReducer"
 
 const reducer = combineReducers({
   userReducer,
-  postReducer
+  postReducer,
+  searchReducer
 });
 
 const initialState = {};

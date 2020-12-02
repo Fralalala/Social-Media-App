@@ -7,10 +7,10 @@ const FriendCard = ({ name, bio, profilePicSrc, uniqueName, history }) => {
   const dispatch = useDispatch();
 
   const userReducer = useSelector((state) => state.userReducer);
-  const { userInfo, usersFriendsInfo } = userReducer;
+  const { userInfo } = userReducer;
 
-  const postReducer = useSelector((state) => state.postReducer);
-  const { posts } = postReducer;
+  // const postReducer = useSelector((state) => state.postReducer);
+  // const { posts } = postReducer;
 
   useEffect(() => {
     if (!userInfo) {

@@ -4,6 +4,7 @@ import {
   deleteFriends,
   getFriends,
 } from "../controller/friendsController.js";
+import { getUserByString } from "../controller/searchController.js";
 import {
   getDetails,
   login,
@@ -11,16 +12,18 @@ import {
   updateUser,
 } from "../controller/userController.js";
 import { uploadObject } from "../middleware/s3Middleware.js";
-const router = express.Router(); 
+const router = express.Router();
 
 //update to /register, /getUser in the future
 router
   .route("/")
-  .post(uploadObject,registerUser) //regiser a user
+  .post(uploadObject, registerUser) //regiser a user
   .get(getDetails) //get user details
   .put(updateUser); //update user
 
 router.route("/login").post(login);
+
+router.route("/search").get(getUserByString);
 
 router
   .route("/friends")

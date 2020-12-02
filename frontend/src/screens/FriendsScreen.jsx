@@ -53,7 +53,7 @@ const FriendsScreen = ({ history }) => {
 
   return (
     <Container  >
-      <Row >
+      {/* <Row >
         <Col md={4} className="ml-auto">
           <Form onSubmit={submitHandler}>
             <Form.Row className="align-items-center">
@@ -81,7 +81,7 @@ const FriendsScreen = ({ history }) => {
             </Form.Row>
           </Form>
         </Col>
-      </Row>
+      </Row> */}
 
       <h1 className="mb-4">Friend List:</h1>
       <Row>
